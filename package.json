@@ -1,0 +1,57 @@
+{
+  "name": "dsh-system-prompt-injector",
+  "version": "0.3.3",
+  "description": "DeepSeek Harness 插件：在每次模型请求前注入自定义信息或修改系统提示词（messages[0]，role=system），支持追加、前置、完全替换和正则变换。",
+  "type": "module",
+  "main": "./lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./client/client.js",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "client",
+    "scripts",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "node scripts/build-client.mjs",
+    "test": "node --test --experimental-test-isolation=none \"test/*.test.js\"",
+    "check": "node scripts/build-client.mjs && node --check lib/index.js && node --check lib/core.js && node --check lib/config.js && node --check lib/store.js && node --check lib/http.js && node --test --experimental-test-isolation=none \"test/*.test.js\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Len-CN/dsh-system-prompt-injector.git"
+  },
+  "homepage": "https://github.com/Len-CN/dsh-system-prompt-injector#readme",
+  "bugs": {
+    "url": "https://github.com/Len-CN/dsh-system-prompt-injector/issues"
+  },
+  "author": "Len-CN",
+  "keywords": [
+    "dsh-plugin",
+    "deepseek-harness",
+    "deepseek",
+    "dsh",
+    "cordis",
+    "system-prompt",
+    "prompt-injection",
+    "prompt-override"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.5"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web"
+    }
+  }
+}

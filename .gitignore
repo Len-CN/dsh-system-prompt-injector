@@ -1,0 +1,13 @@
+# 依赖
+node_modules/
+
+# 本地集成验证：依赖从 app.asar 提取的宿主内核（../.dsh-ref），不随仓库发布
+scripts/verify-real.mjs
+
+# 杂项
+*.log
+.DS_Store
+Thumbs.db
+
+# 运行时状态文件（正常写在 ~/.dsh 下，这里兜底）
+dsh-system-prompt-injector.json

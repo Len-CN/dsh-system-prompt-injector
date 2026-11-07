@@ -1,0 +1,29 @@
+# dsh-system-prompt-injector bundle patch：一个 insert 条目激活插件。
+#
+# 安装方式（任选其一）：
+#   ./install.ps1
+#   dsh plugin --profile desktop add "C:/Users/lingcy/Documents/DSH/提示词注入/dsh-system-prompt-injector"
+#
+# profile 自己的 cordis.patch.yml 可以用相同 id 的条目覆盖这里的 config 块
+# （整个 config 块被替换，不会深度合并）。
+- insert:
+    - id: system-prompt-injector
+      name: 'dsh-system-prompt-injector'
+      config:
+        # 总开关。false 时所有规则都不生效，但规则配置保留。
+        enabled: true
+
+        # 规则列表。每条规则：
+        #   id          稳定 id（默认自动生成 rule-1、rule-2…）
+        #   name        显示名称
+        #   enabled     单条规则开关（默认 true）
+        #   mode        append | prepend | replace
+        #   schedule    every（每轮都注入）| first（仅会话第一次模型请求注入）
+        #   content     内联注入文本
+        #   contentFile  从文件读取注入文本（优先于 content；支持 ~ 和绝对路径）
+        #   agentPresets 仅在这些 agent preset id 下生效（空数组 = 全部）
+        rules: []
+
+        # 可选的规则状态文件路径；留空使用默认的
+        # ~/.dsh/dsh-system-prompt-injector.json。设置页保存时也会同步写这里。
+        statePath: ''
