@@ -2,7 +2,7 @@
 #
 # 安装方式（任选其一）：
 #   ./install.ps1
-#   dsh plugin --profile desktop add "C:/Users/lingcy/Documents/DSH/提示词注入/dsh-system-prompt-injector"
+#   dsh plugin --profile desktop add "<克隆下来的插件目录>"
 #
 # profile 自己的 cordis.patch.yml 可以用相同 id 的条目覆盖这里的 config 块
 # （整个 config 块被替换，不会深度合并）。

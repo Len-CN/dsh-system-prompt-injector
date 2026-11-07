@@ -1,6 +1,6 @@
 # dsh-system-prompt-injector · 系统提示词注入器
 
-一个 [DeepSeek Harness](https://deepseek.com/harness/) Web 插件：在每次模型请求前**改写系统提示词**——也就是模型收到的 `messages[0]`（`role: "system"`）。
+一个 DeepSeek Harness Web 插件：在每次模型请求前**改写系统提示词**——也就是模型收到的 `messages[0]`（`role: "system"`）。
 
 支持两种最常见的用法：
 
@@ -45,7 +45,8 @@
 ### 方式一：安装脚本（推荐）
 
 ```powershell
-cd "C:/Users/lingcy/Documents/DSH/提示词注入/dsh-system-prompt-injector"
+git clone https://github.com/Len-CN/dsh-system-prompt-injector.git
+cd dsh-system-prompt-injector
 ./install.ps1
 ```
 
@@ -60,7 +61,7 @@ cd "C:/Users/lingcy/Documents/DSH/提示词注入/dsh-system-prompt-injector"
 ### 方式二：`dsh plugin`（如果你的环境有全局 dsh 命令）
 
 ```powershell
-dsh plugin --profile desktop add "C:/Users/lingcy/Documents/DSH/提示词注入/dsh-system-prompt-injector"
+dsh plugin --profile desktop add "<克隆下来的插件目录>"
 ```
 
 然后重启 profile（或刷新 Web GUI）。
@@ -72,7 +73,7 @@ dsh plugin --profile desktop add "C:/Users/lingcy/Documents/DSH/提示词注入/
 ```json
 {
   "dependencies": {
-    "dsh-system-prompt-injector": "link:C:/Users/lingcy/Documents/DSH/提示词注入/dsh-system-prompt-injector"
+    "dsh-system-prompt-injector": "link:<克隆下来的插件目录，用正斜杠>"
   },
   "dsh": {
     "profile": {
@@ -85,7 +86,7 @@ dsh plugin --profile desktop add "C:/Users/lingcy/Documents/DSH/提示词注入/
 然后在该 profile 目录执行：
 
 ```powershell
-node "C:/Users/lingcy/.dsh/dsh-runtimes/dsh-primary-runtime/dependencies/pnpm/bin/pnpm.cjs" install
+pnpm install        # 没有全局 pnpm 时用 DeepSeek Harness 内置的那个
 ```
 
 重启 DeepSeek Harness。
@@ -93,9 +94,10 @@ node "C:/Users/lingcy/.dsh/dsh-runtimes/dsh-primary-runtime/dependencies/pnpm/bi
 ### 开发时
 
 ```powershell
-cd "C:/Users/lingcy/Documents/DSH/提示词注入/dsh-system-prompt-injector"
-node scripts/build-client.mjs      # 构建设置页
-node --test --experimental-test-isolation=none "test/*.test.js"   # 跑测试
+git clone https://github.com/Len-CN/dsh-system-prompt-injector.git
+cd dsh-system-prompt-injector
+node scripts/build-client.mjs      # 构建客户端 bundle（client/client.js）
+node --test --experimental-test-isolation=none "test/*.test.js"
 ```
 
 ---
@@ -251,11 +253,12 @@ ctx.on('system-prompt/assemble', async (assembly, context, next) => {
 ### 单元测试
 
 ```powershell
-cd "C:/Users/lingcy/Documents/DSH/提示词注入/dsh-system-prompt-injector"
+git clone https://github.com/Len-CN/dsh-system-prompt-injector.git
+cd dsh-system-prompt-injector
 node --test --experimental-test-isolation=none "test/*.test.js"
 ```
 
-当前 21 个用例，覆盖三种模式、每轮/仅首次时机、多规则顺序、agentPreset 过滤、文件热读取、错误回退和 Host 接线，外加客户端 bundle 的加载冒烟测试。
+当前 22 个用例，覆盖三种模式、每轮/仅首次时机、多规则顺序、agentPreset 过滤、文件热读取、错误回退和 Host 接线，外加客户端 bundle 的加载冒烟测试。
 
 ### 在真实会话里验证
 
@@ -287,4 +290,8 @@ node --test --experimental-test-isolation=none "test/*.test.js"
 ## 安全提示
 
 本插件能改写发给模型的系统提示词，效果等同于由你亲手编辑系统提示词。请只启用你自己写或信任的规则；不要粘贴来路不明的长文本。设置页不会上传任何内容，规则只保存在本机 profile / 状态文件里。
+
+## 许可
+
+[MIT](LICENSE)
 

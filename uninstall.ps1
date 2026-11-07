@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
   从指定 DSH profile 移除 dsh-system-prompt-injector。
 #>

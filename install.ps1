@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
   将 dsh-system-prompt-injector 安装到指定 DSH profile。
 
@@ -61,7 +61,7 @@ if (-not $NoInstall) {
   }
   Write-Host ''
   Write-Host '安装完成。请重启 DeepSeek Harness（或刷新 Web GUI），然后到：'
-  Write-Host '  设置 → 系统提示词注入器'
+  Write-Host '  设置 → 系统提示词'
   Write-Host '添加你的第一条规则。'
 } else {
   Write-Host ''
