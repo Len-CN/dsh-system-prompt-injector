@@ -1,11 +1,11 @@
-﻿<#
+<#
 .SYNOPSIS
   将 dsh-system-prompt-injector 安装到指定 DSH profile。
 
 .DESCRIPTION
   把插件目录以 link: 依赖写入 profile 的 package.json，并把包名加入
   dsh.profile.bundles，然后调用 profile 自带的 pnpm 安装依赖。安装完成后重启
-  DeepSeek Harness 或刷新 Web GUI。
+  DeepSeek Harness；仅刷新 Web GUI 不会加载宿主插件。
 
 .PARAMETER Profile
   profile 名称，默认 desktop。
@@ -31,6 +31,13 @@ if (-not (Test-Path $packagePath)) {
 
 $package = Get-Content $packagePath -Raw -Encoding UTF8 | ConvertFrom-Json
 $linkTarget = 'link:' + ($pluginDir -replace '\\', '/')
+$originalPackage = Get-Content $packagePath -Raw -Encoding UTF8
+if (-not $NoInstall) {
+  $node = Join-Path $dshHome 'dsh-runtimes\dsh-primary-runtime\dependencies\node\bin\node.exe'
+  $pnpm = Join-Path $dshHome 'dsh-runtimes\dsh-primary-runtime\dependencies\pnpm\bin\pnpm.cjs'
+  if (-not (Test-Path $node)) { $node = (Get-Command node -ErrorAction Stop).Source }
+  if (-not (Test-Path $pnpm)) { throw "找不到内置 pnpm：$pnpm" }
+}
 
 if ($null -eq $package.dependencies) {
   $package | Add-Member -NotePropertyName dependencies -NotePropertyValue ([pscustomobject]@{})
@@ -48,19 +55,19 @@ $package | ConvertTo-Json -Depth 30 | Set-Content -Path $packagePath -Encoding U
 Write-Host "已写入依赖与 bundles：$packagePath"
 
 if (-not $NoInstall) {
-  $node = Join-Path $dshHome 'dsh-runtimes\dsh-primary-runtime\dependencies\node\bin\node.exe'
-  $pnpm = Join-Path $dshHome 'dsh-runtimes\dsh-primary-runtime\dependencies\pnpm\bin\pnpm.cjs'
-  if (-not (Test-Path $node)) { $node = (Get-Command node -ErrorAction Stop).Source }
-  if (-not (Test-Path $pnpm)) { throw "找不到内置 pnpm：$pnpm" }
   Push-Location $profileDir
   try {
     & $node $pnpm install
     if ($LASTEXITCODE -ne 0) { throw "pnpm install 失败（exit $LASTEXITCODE）" }
+  } catch {
+    Set-Content -Path $packagePath -Value $originalPackage -Encoding UTF8 -NoNewline
+    Write-Warning '安装失败，已恢复 profile/package.json；请检查 pnpm 报错并重新同步依赖。'
+    throw
   } finally {
     Pop-Location
   }
   Write-Host ''
-  Write-Host '安装完成。请重启 DeepSeek Harness（或刷新 Web GUI），然后到：'
+  Write-Host '安装完成。请完整重启 DeepSeek Harness，然后到：'
   Write-Host '  设置 → 系统提示词'
   Write-Host '添加你的第一条规则。'
 } else {

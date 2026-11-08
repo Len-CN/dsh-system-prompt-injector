@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
   从指定 DSH profile 移除 dsh-system-prompt-injector。
 #>
@@ -25,4 +25,5 @@ if ($null -ne $package.dsh -and $null -ne $package.dsh.profile -and $null -ne $p
 }
 $package | ConvertTo-Json -Depth 30 | Set-Content -Path $packagePath -Encoding UTF8
 Write-Host "已从 $packagePath 移除 dsh-system-prompt-injector"
-Write-Host '重启 DeepSeek Harness 后生效。规则文件保留在 ~/.dsh/dsh-system-prompt-injector.json，可手动删除。'
+Write-Host '请在 profile 目录运行 pnpm install 以同步 lockfile 和 node_modules，再完整重启 DeepSeek Harness。'
+Write-Host '规则文件保留在 ~/.dsh/dsh-system-prompt-injector.json，如不再需要可手动删除。'

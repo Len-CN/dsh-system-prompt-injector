@@ -1,7 +1,7 @@
 {
   "name": "dsh-system-prompt-injector",
-  "version": "0.3.3",
-  "description": "DeepSeek Harness 插件：在每次模型请求前注入自定义信息或修改系统提示词（messages[0]，role=system），支持追加、前置、完全替换和正则变换。",
+  "version": "0.6.0",
+  "description": "DeepSeek Harness 插件：按会话改写系统提示词或在本次模型请求中预填充 assistant 消息，支持追加、前置、替换及原生/软预填充。",
   "type": "module",
   "main": "./lib/index.js",
   "exports": {
@@ -13,7 +13,9 @@
   "files": [
     "lib",
     "client",
-    "scripts",
+    "scripts/build-client.mjs",
+    "install.ps1",
+    "uninstall.ps1",
     "cordis.patch.yml",
     "README.md",
     "LICENSE"
@@ -21,7 +23,7 @@
   "scripts": {
     "build": "node scripts/build-client.mjs",
     "test": "node --test --experimental-test-isolation=none \"test/*.test.js\"",
-    "check": "node scripts/build-client.mjs && node --check lib/index.js && node --check lib/core.js && node --check lib/config.js && node --check lib/store.js && node --check lib/http.js && node --test --experimental-test-isolation=none \"test/*.test.js\""
+    "check": "node scripts/build-client.mjs && node --check lib/index.js && node --check lib/core.js && node --check lib/prefill.js && node --check lib/config.js && node --check lib/store.js && node --check lib/http.js && node --test --experimental-test-isolation=none \"test/*.test.js\""
   },
   "repository": {
     "type": "git",

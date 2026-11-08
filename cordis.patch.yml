@@ -10,17 +10,24 @@
     - id: system-prompt-injector
       name: 'dsh-system-prompt-injector'
       config:
-        # 总开关。false 时所有规则都不生效，但规则配置保留。
+        # 总开关。关闭后所有规则都不生效，聊天快捷按钮也会隐藏。
         enabled: true
+
+        # 已开启注入的会话 id；只有总开关开启且会话在此列表中才会注入。
+        # 通常由聊天快捷开关自动维护。
+        sessions: []
 
         # 规则列表。每条规则：
         #   id          稳定 id（默认自动生成 rule-1、rule-2…）
         #   name        显示名称
         #   enabled     单条规则开关（默认 true）
-        #   mode        append | prepend | replace
+        #   target      system（默认，改写系统提示词）| assistant（assistant 预填充）
+        #   prefillMode target=assistant 时生效：native（原生）| soft（软预填充）
+        #   mode        append | prepend | replace（target=assistant 时忽略）
         #   schedule    every（每轮都注入）| first（仅会话第一次模型请求注入）
-        #   content     内联注入文本
+        #   content     内联注入文本（native / system 使用）
         #   contentFile  从文件读取注入文本（优先于 content；支持 ~ 和绝对路径）
+        #   soft        软预填充消息：{ before: [{ role: user|assistant, content }], after: [...] }
         #   agentPresets 仅在这些 agent preset id 下生效（空数组 = 全部）
         rules: []
 

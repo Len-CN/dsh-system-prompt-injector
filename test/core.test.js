@@ -171,3 +171,25 @@ test('summarizeRules 返回内容长度与文件错误', () => {
   assert.equal(summary[1].contentLength, 0)
   assert.match(summary[1].error, /读取文件失败/)
 })
+
+test('summarizeRules 软预填充按消息统计长度并生成角色预览', () => {
+  const rules = normalizeRules([
+    {
+      id: 'soft',
+      target: 'assistant',
+      prefillMode: 'soft',
+      soft: {
+        before: [
+          { role: 'user', content: '你可以帮我写一个贪吃蛇吗' },
+          { role: 'assistant', content: '我可以' },
+        ],
+        after: [{ role: 'user', content: '开始' }],
+      },
+    },
+  ])
+  const summary = summarizeRules(rules)
+  assert.equal(summary[0].contentLength, ['你可以帮我写一个贪吃蛇吗', '我可以', '开始'].join('\n').length)
+  assert.equal(summary[0].source, 'inline')
+  assert.match(summary[0].preview, /用户：你可以帮我写一个贪吃蛇吗/)
+  assert.match(summary[0].preview, /助手：我可以/)
+})
